@@ -6,6 +6,9 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HttpServer {
 
 	private final int port;
@@ -13,6 +16,7 @@ public class HttpServer {
 	private ExecutorService executorService;
 	private Boolean init;
 	private CacheManager cacheManager;
+	private Logger logger = (Logger) LoggerFactory.getLogger(HttpServer.class);
 
 	public HttpServer(int port) {
 		this.port = port;
@@ -39,6 +43,10 @@ public class HttpServer {
 		try {
 			while (true) {
 				System.out.println("접속 대기중");
+				logger.info("접속대기중");
+				logger.debug("debug");
+				logger.error("error");
+				logger.trace("trace");
 				socket = listener.accept();
 				System.out.printf("Connected IP : %s, Port : %d\n", socket.getInetAddress(),
 						socket.getPort());

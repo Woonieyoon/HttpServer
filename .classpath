@@ -2,5 +2,13 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_191"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/slf4j-1.7.25/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/slf4j-1.7.25/slf4j-api-1.7.25-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-access-1.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-access-1.2.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-classic-1.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-classic-1.2.3-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-core-1.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/notebiz0020/Downloads/logback-1.2.3/logback-core-1.2.3-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

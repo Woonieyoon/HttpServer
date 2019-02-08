@@ -1,0 +1,2 @@
+234  [main] INFO  httpserver.HttpServer - 접속대기중
+234  [main] ERROR httpserver.HttpServer - error
