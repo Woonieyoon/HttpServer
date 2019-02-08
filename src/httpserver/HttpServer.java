@@ -24,7 +24,6 @@ public class HttpServer {
 		if (init) {
 			return;
 		}
-
 		try {
 			cacheManager = new CacheManager();
 			listener = new ServerSocket(port);

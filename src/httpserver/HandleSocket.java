@@ -40,36 +40,27 @@ public class HandleSocket implements Runnable {
 		try (InputStream in = socket.getInputStream();
 				BufferedReader br = new BufferedReader(new InputStreamReader(in));) {
 
-			String header = br.readLine();
-			String[] data = header.split(" ");
-			String path = data[1];
+			ParsedStartLine parsedStartLine = new StartLineParser(br).parse();
 
-			String fileName = path.substring(path.lastIndexOf("/"));
-			String[] fileNameAndExtension = fileName.split("\\.");
-			boolean hasExtenstion = fileNameAndExtension.length >= 2;
+			String path = parsedStartLine.getPath();
+			String extension = parsedStartLine.getExtension();
 
-			String extension = null;
-			if (hasExtenstion) {
-				extension = fileNameAndExtension[fileNameAndExtension.length - 1];
-			}
-
-			
 			System.out.println("요청Path: [" + path + "]");
-			
-			if(path.equals("/favicon.ico"))
-					return;
-			
+
+			if (path.equals("/favicon.ico"))
+				return;
+
 			System.out.println("확장자: [" + extension + "]");
 
-			//캐시 가져오기 or생성
-			CacheFileData cacheData = cacheManager.getCacheMap().containsKey(WEB_ROOT + path)
-					? cacheManager.getCacheMap().get(WEB_ROOT + path)
-					: makeCache(WEB_ROOT + path);
+			// 캐시 가져오기 or생성
+			CacheFileData cacheData = null;
+			if ((cacheData = cacheManager.findCache(WEB_ROOT + path)) == null) {
+				cacheData = makeCache(WEB_ROOT + path);
+			}
 
-					
 			System.out.println(cacheData.getFile().getAbsolutePath());
-			System.out.println(extension+"확장자");
-			
+			System.out.println(extension + "확장자");
+
 			Executor executor = executorManager.getExecutor().get(extension);
 			executor.execute(socket, cacheData);
 
@@ -80,16 +71,13 @@ public class HandleSocket implements Runnable {
 
 	public CacheFileData makeCache(String filePath) {
 		try {
-			System.out.println("만들Path:" + filePath);
-			System.out.println("만들었어");
+			System.out.println("캐쉬가 없어서 만든다");
 			File file = new File(filePath);
 			byte[] array = Files.readAllBytes(file.toPath());
+			
+			CacheFileData cacheFileData = new CacheFileData(file, array, file.lastModified());
+			cacheManager.put(file, cacheFileData);
 
-			CacheFileData cacheFileData = new CacheFileData(file, array);
-			synchronized (cacheManager) {
-				cacheManager.getCacheMap().put(filePath, cacheFileData);
-				cacheManager.getCacheList().add(cacheFileData);
-			}
 			return cacheFileData;
 		} catch (IOException e) {
 			e.printStackTrace();

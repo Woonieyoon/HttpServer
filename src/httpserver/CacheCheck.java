@@ -1,8 +1,6 @@
 package httpserver;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class CacheCheck implements Runnable {
 
@@ -16,26 +14,22 @@ public class CacheCheck implements Runnable {
 	public void run() {
 		while (true) {
 			try {
-				Thread.sleep(2000);
-				System.out.println("===================");
-				System.out.println("캐쉬 데이터 갯수" + cacheManager.getCacheList().size());
-				for (CacheFileData cacheFileData : cacheManager.getCacheMap().values()) {
-
-					if (!cacheFileData.getFile().exists()) {
-						cacheManager.getCacheMap().remove(cacheFileData.getFile().getAbsolutePath());
-						cacheManager.getCacheList().remove(cacheFileData);
+				Thread.sleep(8000);
+				System.out.println("==============================================");
+				System.out.println("캐쉬 데이터 갯수" + cacheManager.getCacheSet().size());
+				for (File cacheFile : cacheManager.getCacheSet()) {
+					if (!cacheFile.exists()) {
+						cacheManager.remove(cacheFile);
 					}
 
-					File tempfile = new File(cacheFileData.getFile().getAbsolutePath());
+					File tempfile = new File(cacheFile.getAbsolutePath());
 
-					if (tempfile.lastModified() != cacheFileData.getFile().lastModified()) {
-						byte[] array = Files.readAllBytes(tempfile.toPath());
-						cacheFileData.setFilebyte(array);
+					// Arrays.equals(byte,byte)로 비교하는 방법도 있지만 데이터를 다 비교하기 때문에 너무 느리다.
+					if (tempfile.lastModified() != cacheManager.get(cacheFile).getLastModify()) {
+						cacheManager.remove(cacheFile);
 					}
 				}
 			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}

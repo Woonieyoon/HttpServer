@@ -19,7 +19,6 @@ public class HtmlResponse implements Executor {
 		try (OutputStream out = socket.getOutputStream();
 				PrintWriter pw = new PrintWriter(new OutputStreamWriter(out));) {
 
-			System.out.println("ss");
 			File file = cacheFileData.getFile();
 			long fileLength = file.length();
 			pw.println("HTTP/1.1 200 OK");
@@ -29,17 +28,9 @@ public class HtmlResponse implements Executor {
 			pw.println("");
 			pw.flush();
 
-//			FileInputStream fis = new FileInputStream(file);
 			byte[] array = cacheFileData.getFilebyte();
-//			byte[] b = new byte[1024];
-//			int read = 0;
-//			while ((read = fis.read(b)) != -1) {
-//				out.write(b, 0, read);
-//				out.flush();
-//			}
 			out.write(array);
 			out.flush();
-//			fis.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
