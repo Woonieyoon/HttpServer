@@ -11,13 +11,16 @@ import org.slf4j.LoggerFactory;
 
 public class HttpServer {
 
+	private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
+	private static final boolean IS_DEBUG_ENABLED = logger.isDebugEnabled();
+	private static final boolean IS_ERROR_ENABLED = logger.isErrorEnabled();
+
 	private final int port;
 	private ServerSocket listener;
 	private ExecutorService executorService;
 	private Boolean init;
 	private CacheManager cacheManager;
-	private Logger logger = (Logger) LoggerFactory.getLogger(HttpServer.class);
-
+  
 	public HttpServer(int port) {
 		this.port = port;
 		init = false;
@@ -43,18 +46,19 @@ public class HttpServer {
 		try {
 			while (true) {
 				System.out.println("접속 대기중");
-				logger.info("접속대기중");
-				logger.debug("debug");
-				logger.error("error");
-				logger.trace("trace");
+				if (IS_DEBUG_ENABLED) {
+					logger.debug("debug");
+				}
 				socket = listener.accept();
-				System.out.printf("Connected IP : %s, Port : %d\n", socket.getInetAddress(),
-						socket.getPort());
-				HandleSocket handleSocket = new HandleSocket(socket,cacheManager);
+				System.out.printf("Connected IP : %s, Port : %d\n", socket.getInetAddress(), socket.getPort());
+				HandleSocket handleSocket = new HandleSocket(socket, cacheManager);
 				handleSocket.init();
 				executorService.submit(handleSocket);
 			}
 		} catch (IOException e) {
+			if(IS_ERROR_ENABLED) {
+				logger.error("Socket Connection Fail",e);
+			}
 			e.printStackTrace();
 		}
 	}
